@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">My Module</string>
+
+
+    <string name="account_type">org.jakubczyk.account</string>
+    <string name="authority">org.jakubczyk.provider</string>
+
+</resources>

@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+
 import org.jakubczyk.syncandaccoutns.lib.AccountHelper;
 
 
@@ -19,26 +20,22 @@ public class AccountsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accoutns);
 
-        TextView  textView = (TextView) findViewById(R.id.accounts_tv);
+        TextView textView = (TextView) findViewById(R.id.accounts_tv);
 
         AccountHelper.createAccount(this);
 
         final Account myAccount = AccountHelper.getMyAccount(this);
 
-        textView.setText(String.format("%s\nPassword: %s",myAccount.toString(), AccountManager.get(this).getPassword(myAccount)));
+        textView.setText(String.format("%s\nPassword: %s", myAccount.toString(), AccountManager.get(this).getPassword(myAccount)));
 
 
+        // FORCE SYNC
         final Bundle forcedSyncBundle = new Bundle();
-        forcedSyncBundle.putBoolean(
-                ContentResolver.SYNC_EXTRAS_MANUAL, true);
-        forcedSyncBundle.putBoolean(
-                ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+        // The two flags are required to schedule forced sync
+        forcedSyncBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+        forcedSyncBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
         forcedSyncBundle.putString("MANUAL", "This Sync was triggered by manual action!");
 
-        /*
-         * Request the sync for the default account, authority, and
-         * manual sync settings
-         */
 
         findViewById(R.id.sync_btn).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,10 +44,15 @@ public class AccountsActivity extends Activity {
             }
         });
 
+
+        // PERIODIC SYNC
+
+        // This is also handled in AndroidManifest.xml
         ContentResolver.setIsSyncable(myAccount, getString(R.string.authority), 1);
         ContentResolver.setSyncAutomatically(myAccount, getString(R.string.authority), true);
 
 
+        // Create own bundle which is passed to Sync Service Adapter. Here you can put whatever you want.
         Bundle periodicBundle = new Bundle();
         periodicBundle.putString("forced by", "time");
         periodicBundle.putString("PERIODIC", "Yes ! It's periodic sync triggered by OS");
@@ -61,7 +63,7 @@ public class AccountsActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        
+
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.accoutns, menu);
         return true;

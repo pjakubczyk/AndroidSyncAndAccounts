@@ -49,10 +49,12 @@ public class Authenticator extends AbstractAccountAuthenticator {
         return null;
     }
 
-    // Getting an authentication token is not supported
     @Override
     public Bundle getAuthToken(AccountAuthenticatorResponse r, Account account, String authTokenType, Bundle bundle) throws NetworkErrorException {
+        // The method is called to get a token but token is the same string as the password.
+        // For some cases you will use to store password or real token.
 
+        // Here I write to logcat all information about the request. The bundle contains also custom data.
         String log = String.format("AccountAuthenticatorResponse: [[%s]]\nAccount: [[%s]]\nauthTokenType: [[%s]]\nBundle: [[%s]]",
                 r.toString(),
                 account.toString(),
@@ -61,8 +63,12 @@ public class Authenticator extends AbstractAccountAuthenticator {
 
         Log.d("DDD", log);
 
+
+        // !! This value is set by Operating System. Developer can't override it! It's really helpful to get information
+        // who is asking :)
         String packageName = bundle.getString("androidPackageName");
 
+        // The communication is done two-way by bundles :)
         Bundle tokenBundle = new Bundle();
 
         if ("org.jakubczyk.syncandaccoutns.friendly".equals(packageName)) {

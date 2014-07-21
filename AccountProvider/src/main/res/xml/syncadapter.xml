@@ -8,3 +8,7 @@
         android:supportsUploading="false"
         android:allowParallelSyncs="false"
         android:isAlwaysSyncable="true"/>
+
+    <!--android:contentAuthority in some places are hardcoded because of AAPT. Please be careful here. -->
+    <!--android:allowParallelSyncs is suggested to because one sync might interfere others -->
+    <!--http://developer.android.com/reference/android/content/AbstractThreadedSyncAdapter.html-->

@@ -1,60 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="org.jakubczyk.syncandaccoutns.provider">
+    package="org.jakubczyk.syncandaccoutns.provider">
 
 
-    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
-    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
-    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
-    <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
 
-    <uses-permission
-            android:name="android.permission.READ_SYNC_SETTINGS"/>
-    <uses-permission
-            android:name="android.permission.WRITE_SYNC_SETTINGS"/>
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
 
     <application
-            android:allowBackup="true"
-            android:icon="@drawable/ic_launcher"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme">
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
         <activity
-                android:name=".AccountsActivity"
-                android:label="@string/app_name">
+            android:name=".AccountsActivity"
+            android:label="@string/app_name">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <service
-                android:name=".AuthenticatorService">
+        <!-- This service is responsible for sharing user credentials -->
+        <service android:name=".AuthenticatorService">
             <intent-filter>
-                <action android:name="android.accounts.AccountAuthenticator"/>
+                <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
             <meta-data
-                    android:name="android.accounts.AccountAuthenticator"
-                    android:resource="@xml/authenticator"/>
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator" />
         </service>
 
+        <!-- This service is used for syncing data-->
+        <!-- Just copy and paste to make it work-->
         <service
-                android:name=".SyncService"
-                android:exported="true"
-                android:process=":sync"
-                >
+            android:name=".SyncService"
+            android:exported="true"
+            android:process=":sync">
+            <!-- Mind about exported. Starts in another process so all listeners wont' work!-->
             <intent-filter>
-                <action android:name="android.content.SyncAdapter"/>
+                <action android:name="android.content.SyncAdapter" />
             </intent-filter>
-            <meta-data android:name="android.content.SyncAdapter"
-                       android:resource="@xml/syncadapter"/>
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/syncadapter" />
         </service>
 
+        <!-- It's required even when your app doesn't serve any data -->
         <provider
-                android:name=".StubProvider"
-                android:authorities="@string/authority3"
-                android:exported="false"
-                android:syncable="true"/>
+            android:name=".StubProvider"
+            android:authorities="@string/authority3"
+            android:exported="false"
+            android:syncable="true" />
 
 
     </application>

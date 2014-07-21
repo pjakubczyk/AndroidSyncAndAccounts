@@ -5,3 +5,7 @@
     android:icon="@drawable/ic_launcher"
     android:label="@string/app_name"
     android:smallIcon="@drawable/ic_launcher" />
+
+    <!--android:customTokens are used by Authenticator in getAuthToken method. This allows to manipulate who can access the token/password-->
+
+    <!--http://developer.android.com/reference/android/accounts/AbstractAccountAuthenticator.html-->

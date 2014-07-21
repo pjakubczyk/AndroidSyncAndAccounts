@@ -8,9 +8,7 @@ import android.accounts.AuthenticatorException;
 import android.accounts.OperationCanceledException;
 import android.app.Activity;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -75,13 +73,17 @@ public class AccountHelper {
 
         // Just check if providing custom package name can hack Android API
         Bundle bundle = new Bundle();
+        // Add two dummy pieces of information
         bundle.putString("my account", "dummy bundle");
         bundle.putString("androidPackageName2", "org.jakubczyk.syncandaccoutns.friendly");
+
+        // the value of androidPackageName is later replaced by Operating System
         bundle.putString("androidPackageName", "org.jakubczyk.syncandaccoutns.friendly");
 
         AccountHelper.getManager(activity).getAuthToken(myAccount, "aaa", bundle, activity, new AccountManagerCallback<Bundle>() {
             @Override
             public void run(AccountManagerFuture<Bundle> bundleAccountManagerFuture) {
+                // This is the response from org.jakubczyk.syncandaccoutns.provider.Authenticator.getAuthToken()
 
                 CharSequence currentContent = accountTv.getText();
 
@@ -99,12 +101,14 @@ public class AccountHelper {
                     result = e.toString();
                 }
 
+                // Print the token got from Authenticator
                 String text = String.format("%s\ntoken: %s", currentContent, result);
 
                 accountTv.setText(text);
             }
         }, null);
 
+        // Print the password got from Account Manager
         accountTv.setText(String.format("%s\npassword: %s\n", accountString, passwordString));
     }
 

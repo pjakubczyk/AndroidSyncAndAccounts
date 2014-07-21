@@ -52,7 +52,7 @@
 
         <provider
                 android:name=".StubProvider"
-                android:authorities="org.jakubczyk.provider"
+                android:authorities="@string/authority3"
                 android:exported="false"
                 android:syncable="true"/>
 

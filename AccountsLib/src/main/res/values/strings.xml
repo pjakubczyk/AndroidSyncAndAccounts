@@ -3,6 +3,7 @@
 
 
     <string name="account_type">org.jakubczyk.account</string>
-    <string name="authority">org.jakubczyk.provider</string>
+    <string name="authority">org.jakubczyk.provider3</string>
+    <string name="authority3">org.jakubczyk.provider3</string>
 
 </resources>

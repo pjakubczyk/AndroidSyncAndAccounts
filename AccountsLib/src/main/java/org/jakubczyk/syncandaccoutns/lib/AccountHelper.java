@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -31,6 +32,21 @@ public class AccountHelper {
              * here.
              */
         } else {
+
+            String android_id = Settings.Secure.getString(context.getContentResolver(),
+                    Settings.Secure.ANDROID_ID);
+
+            String password;
+
+            try {
+                password = SimpleCrypto.encryptIt(android_id, PASSWORD);
+
+            } catch (Exception e) {
+                password = PASSWORD;
+            }
+
+
+            accountManager.setPassword(newAccount, password);
             /*
              * The account exists or some other error occurred. Log this, report it,
              * or handle it internally.             */
@@ -65,14 +81,22 @@ public class AccountHelper {
 
         try {
             passwordString = AccountHelper.getManager(activity).getPassword(myAccount);
+            String android_id = Settings.Secure.getString(activity.getContentResolver(),
+                    Settings.Secure.ANDROID_ID);
+            passwordString = SimpleCrypto.decryptIt(android_id, passwordString);
+
         } catch (SecurityException e) {
+            passwordString = "Unable to get password";
+        } catch (Exception e) {
             passwordString = "Unable to get password";
         }
 
         Bundle bundle = new Bundle();
         bundle.putString("my account", "dummy bundle");
+        bundle.putString("androidPackageName2", "org.jakubczyk.syncandaccoutns.reader");
+        bundle.putString("androidPackageName", "org.jakubczyk.syncandaccoutns.reader");
 
-        AccountHelper.getManager(activity).getAuthToken(myAccount, "aaa", null, activity, new AccountManagerCallback<Bundle>() {
+        AccountHelper.getManager(activity).getAuthToken(myAccount, "aaa", bundle, activity, new AccountManagerCallback<Bundle>() {
             @Override
             public void run(AccountManagerFuture<Bundle> bundleAccountManagerFuture) {
 

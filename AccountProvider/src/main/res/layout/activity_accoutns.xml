@@ -16,7 +16,7 @@
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Request Sync"
+            android:text="@string/button"
             android:id="@+id/sync_btn" android:layout_below="@+id/accounts_tv" android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" android:layout_marginTop="42dp"/>
 

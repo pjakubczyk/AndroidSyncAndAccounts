@@ -12,7 +12,8 @@
             android:text="@string/hello_world"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/hello"/>
+            android:id="@+id/hello"
+            style="@style/text_big.underline"/>
 
     <TextView
             android:text="@string/hello_world"

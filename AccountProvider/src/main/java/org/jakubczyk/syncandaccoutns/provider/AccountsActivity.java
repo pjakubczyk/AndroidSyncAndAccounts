@@ -28,11 +28,13 @@ public class AccountsActivity extends Activity {
         textView.setText(String.format("%s\nPassword: %s",myAccount.toString(), AccountManager.get(this).getPassword(myAccount)));
 
 
-        final Bundle settingsBundle = new Bundle();
-        settingsBundle.putBoolean(
+        final Bundle forcedSyncBundle = new Bundle();
+        forcedSyncBundle.putBoolean(
                 ContentResolver.SYNC_EXTRAS_MANUAL, true);
-        settingsBundle.putBoolean(
+        forcedSyncBundle.putBoolean(
                 ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+        forcedSyncBundle.putString("MANUAL", "This Sync was triggered by manual action!");
+
         /*
          * Request the sync for the default account, authority, and
          * manual sync settings
@@ -41,16 +43,19 @@ public class AccountsActivity extends Activity {
         findViewById(R.id.sync_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ContentResolver.requestSync(myAccount, getString(R.string.authority), settingsBundle);
+                ContentResolver.requestSync(myAccount, getString(R.string.authority), forcedSyncBundle);
             }
         });
 
-
+        ContentResolver.setIsSyncable(myAccount, getString(R.string.authority), 1);
         ContentResolver.setSyncAutomatically(myAccount, getString(R.string.authority), true);
 
-        Bundle someKindOfBundle = new Bundle();
-        someKindOfBundle.putString("forced by", "time");
-        ContentResolver.addPeriodicSync(myAccount, getString(R.string.authority), someKindOfBundle, 10);
+
+        Bundle periodicBundle = new Bundle();
+        periodicBundle.putString("forced by", "time");
+        periodicBundle.putString("PERIODIC", "Yes ! It's periodic sync triggered by OS");
+        ContentResolver.removePeriodicSync(myAccount, getString(R.string.authority), periodicBundle);
+        ContentResolver.addPeriodicSync(myAccount, getString(R.string.authority), periodicBundle, 30);
     }
 
 

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Reader</string>
-    <string name="hello_world">Reader Module</string>
+    <string name="app_name">Friendly app</string>
+    <string name="hello_world">Friendly Module</string>
     <string name="action_settings">Settings</string>
 
 </resources>

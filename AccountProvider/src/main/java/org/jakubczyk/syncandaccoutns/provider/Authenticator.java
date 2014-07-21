@@ -52,8 +52,6 @@ public class Authenticator extends AbstractAccountAuthenticator {
     // Getting an authentication token is not supported
     @Override
     public Bundle getAuthToken(AccountAuthenticatorResponse r, Account account, String authTokenType, Bundle bundle) throws NetworkErrorException {
-        Bundle bundle1 = new Bundle();
-        bundle1.putString("token", "nekot");
 
         String log = String.format("AccountAuthenticatorResponse: [[%s]]\nAccount: [[%s]]\nauthTokenType: [[%s]]\nBundle: [[%s]]",
                 r.toString(),
@@ -63,15 +61,14 @@ public class Authenticator extends AbstractAccountAuthenticator {
 
         Log.d("DDD", log);
 
-
         String packageName = bundle.getString("androidPackageName");
 
         Bundle tokenBundle = new Bundle();
 
-        if ("org.jakubczyk.syncandaccoutns.reader".equals(packageName)) {
-            tokenBundle.putString("token", "nekot " + AccountHelper.getManager(context).getPassword(account));
+        if ("org.jakubczyk.syncandaccoutns.friendly".equals(packageName)) {
+            tokenBundle.putString("token", "Your password is: " + AccountHelper.getManager(context).getPassword(account));
         } else {
-            tokenBundle.putString("not a token", "tralala " + AccountHelper.getManager(context).getPassword(account));
+            tokenBundle.putString("not a token", "Sorry but it's not real password " + AccountHelper.getManager(context).getPassword(account));
         }
 
         return tokenBundle;

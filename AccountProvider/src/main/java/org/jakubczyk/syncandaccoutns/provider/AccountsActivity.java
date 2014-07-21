@@ -1,6 +1,7 @@
 package org.jakubczyk.syncandaccoutns.provider;
 
 import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.os.Bundle;
@@ -22,10 +23,9 @@ public class AccountsActivity extends Activity {
 
         AccountHelper.createAccount(this);
 
-
         final Account myAccount = AccountHelper.getMyAccount(this);
 
-        textView.setText(myAccount.toString());
+        textView.setText(String.format("%s\nPassword: %s",myAccount.toString(), AccountManager.get(this).getPassword(myAccount)));
 
 
         final Bundle settingsBundle = new Bundle();
@@ -37,8 +37,6 @@ public class AccountsActivity extends Activity {
          * Request the sync for the default account, authority, and
          * manual sync settings
          */
-
-
 
         findViewById(R.id.sync_btn).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,7 +50,7 @@ public class AccountsActivity extends Activity {
 
         Bundle someKindOfBundle = new Bundle();
         someKindOfBundle.putString("forced by", "time");
-        ContentResolver.addPeriodicSync(myAccount, getString(R.string.authority), someKindOfBundle, 90);
+        ContentResolver.addPeriodicSync(myAccount, getString(R.string.authority), someKindOfBundle, 10);
     }
 
 

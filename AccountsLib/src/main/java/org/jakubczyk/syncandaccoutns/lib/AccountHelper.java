@@ -1,6 +1,11 @@
 package org.jakubczyk.syncandaccoutns.lib;
 
-import android.accounts.*;
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
 import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -15,7 +20,7 @@ public class AccountHelper {
 
     public static final String ACCOUNT = "uTestAccount";
 
-    public static final String PASSWORD = "The Password";
+    public static final String PASSWORD = "Very secret word";
 
     public static void createAccount(Context context) {
         // Create the account type and default account
@@ -32,21 +37,7 @@ public class AccountHelper {
              * here.
              */
         } else {
-
-            String android_id = Settings.Secure.getString(context.getContentResolver(),
-                    Settings.Secure.ANDROID_ID);
-
-            String password;
-
-            try {
-                password = SimpleCrypto.encryptIt(android_id, PASSWORD);
-
-            } catch (Exception e) {
-                password = PASSWORD;
-            }
-
-
-            accountManager.setPassword(newAccount, password);
+            accountManager.setPassword(newAccount, PASSWORD);
             /*
              * The account exists or some other error occurred. Log this, report it,
              * or handle it internally.             */
@@ -71,30 +62,22 @@ public class AccountHelper {
 
         String accountString;
 
-        try {
-            accountString = myAccount.toString();
-        } catch (SecurityException e) {
-            accountString = "Unable to get user";
-        }
+        accountString = myAccount.toString();
 
         String passwordString;
 
         try {
             passwordString = AccountHelper.getManager(activity).getPassword(myAccount);
-            String android_id = Settings.Secure.getString(activity.getContentResolver(),
-                    Settings.Secure.ANDROID_ID);
-            passwordString = SimpleCrypto.decryptIt(android_id, passwordString);
 
-        } catch (SecurityException e) {
-            passwordString = "Unable to get password";
         } catch (Exception e) {
             passwordString = "Unable to get password";
         }
 
+        // Just check if providing custom package name can hack Android API
         Bundle bundle = new Bundle();
         bundle.putString("my account", "dummy bundle");
-        bundle.putString("androidPackageName2", "org.jakubczyk.syncandaccoutns.reader");
-        bundle.putString("androidPackageName", "org.jakubczyk.syncandaccoutns.reader");
+        bundle.putString("androidPackageName2", "org.jakubczyk.syncandaccoutns.friendly");
+        bundle.putString("androidPackageName", "org.jakubczyk.syncandaccoutns.friendly");
 
         AccountHelper.getManager(activity).getAuthToken(myAccount, "aaa", bundle, activity, new AccountManagerCallback<Bundle>() {
             @Override
@@ -116,46 +99,13 @@ public class AccountHelper {
                     result = e.toString();
                 }
 
-
                 String text = String.format("%s\ntoken: %s", currentContent, result);
 
                 accountTv.setText(text);
             }
         }, null);
 
-
-        new AsyncTask<Void, Void, String>() {
-
-            @Override
-            protected String doInBackground(Void... voids) {
-                String tokenString;
-                try {
-                    tokenString = AccountHelper.getManager(activity).blockingGetAuthToken(myAccount, "aaa", true);
-                } catch (OperationCanceledException e) {
-                    tokenString = e.getMessage();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    tokenString = e.getMessage();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    tokenString = e.getMessage();
-                }
-                return tokenString;
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-                CharSequence currentContent = accountTv.getText();
-                String text = String.format("%s\nBlockingToken: %s", currentContent, s);
-
-                accountTv.setText(text);
-            }
-        };//.execute((Void) null);
-
-
         accountTv.setText(String.format("%s\npassword: %s\n", accountString, passwordString));
-
     }
 
 

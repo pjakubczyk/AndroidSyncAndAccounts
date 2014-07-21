@@ -1,1 +1,1 @@
-include ':AccountProvider', ':AccountsLib', ':Reader', ':Foreign'
+include ':AccountProvider', ':AccountsLib', ':Foreign', ':Friendly'
